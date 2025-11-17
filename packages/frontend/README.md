@@ -1,135 +1,103 @@
 # TalentBinder Frontend
 
-## Deployment-Konfiguration
+React + TypeScript + Vite frontend application.
 
-### Repository
-- **Standort**: GitLab (oder dein Git-Provider)
-- **Default Branch**: `main`
+## 🚀 Quick Start
 
-### Web-Adressen
-- **Produktion**: `https://talentbinder.com` (Beispiel-Domain)
+### Local Development
+```bash
+# From monorepo root
+npm install
+npm run dev:frontend
 
-### JavaScript-Skripte
-Die folgenden Skripte sind in der `package.json` definiert:
+# Or from this directory
+cd packages/frontend
+npm install
+npm run dev
+```
+
+Runs on `http://localhost:5173`
+
+### Environment Variables
+Create a `.env` file:
+```ini
+VITE_API_URL=http://localhost:4000
+```
+
+## 📦 Scripts
 
 ```json
 {
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  }
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "preview": "vite preview",
+  "lint": "eslint ."
 }
 ```
 
-### Globale Abhängigkeiten
-- **Node.js**: Version 18 oder höher
-- **npm**: Wird automatisch mit Node.js installiert
+## 🏗️ Project Structure
 
-### Projekt-Abhängigkeiten
+```
+src/
+├── App.tsx               # Main app component
+├── main.tsx              # Entry point
+├── api/                  # API client functions
+├── components/           # Reusable components
+├── pages/                # Page components
+├── guards/               # Route protection
+├── types/                # TypeScript types
+└── utils/                # Helper functions
+```
 
-**Laufzeit-Abhängigkeiten:**
-- `jwt-decode`: ^4.0.0
-- `react`: ^19.1.1
-- `react-dom`: ^19.1.1
-- `react-router-dom`: ^7.9.1
-- `react-icons`: ^4.11.0
+## 🎨 Key Features
 
-**Entwicklungs-Abhängigkeiten:**
-- `@eslint/js`: ^9.35.0
-- `@types/react`: ^19.1.13
-- `@types/react-dom`: ^19.1.9
-- `@vitejs/plugin-react`: ^5.0.2
-- `eslint`: ^9.35.0
-- `eslint-plugin-react-hooks`: ^5.2.0
-- `eslint-plugin-react-refresh`: ^0.4.20
-- `globals`: ^16.4.0
-- `sass`: ^1.93.1
-- `typescript`: ~5.8.3
-- `typescript-eslint`: ^8.43.0
-- `vite`: ^7.1.6
+- **Authentication** - JWT-based auth with protected routes
+- **Candidate Management** - CRUD operations for candidates
+- **Event Management** - Create and manage recruitment events
+- **User Management** - Admin panel for user administration
+- **Reporting** - Generate and view reports
 
-### Dateistruktur
-Alle wichtigen Dateien befinden sich im `frontend`-Verzeichnis:
-- `package.json`
-- `vite.config.ts`
-- `README.md`
-- `public/` (Statische Assets)
-- `src/` (React-Quellcode)
+## 🚢 Deployment
 
-### Framework
-- **Typ**: JavaScript Client-Side (React mit Vite und TypeScript)
-- **Server-seitig**: Nein
+**Automated via GitLab CI/CD** - See [CI_CD_PIPELINE.md](../../docs/CI_CD_PIPELINE.md)
 
----
+The frontend automatically deploys to production when changes are pushed to `main`:
+1. CI builds React app → static files
+2. CI packages `dist/` + `setup.sh`
+3. CI deploys to `/var/www/talentbinder-frontend`
+4. `setup.sh` sets permissions & reloads nginx
 
-## Quick-Setup-Befehle
-
-### 1. Abhängigkeiten installieren
+### Manual Deployment (if needed)
 ```bash
-npm install
+# On server
+cd /var/www/talentbinder-frontend
+sudo ./setup.sh
+sudo systemctl reload nginx
 ```
 
-### 2. Entwicklungsserver starten
+## 🔧 Production Configuration
+
+The frontend is served as static files by nginx.
+
+**Web server management:**
 ```bash
-npm run dev
-# Läuft standardmäßig auf http://localhost:5173
-```
-
-### 3. Produktions-Build erstellen
-```bash
-# Erstellt den `dist/`-Ordner mit den statischen Dateien
-npm run build
-```
-
----
-
-## Produktions-Deployment (mit Nginx)
-
-### 1. Umgebungsvariable für die API
-Erstelle eine Datei namens `.env.production` im `frontend`-Verzeichnis mit der URL deines Backends:
-```
-# frontend/.env.production
-VITE_API_URL=https://talentbinder.com/api
-```
-
-### 2. Build-Dateien auf den Server kopieren
-Übertrage den Inhalt des `dist`-Ordners auf deinen Server, z.B. nach `/var/www/talentbinder-frontend`.
-
-### 3. Nginx als Reverse Proxy konfigurieren
-Erstelle eine Nginx-Konfigurationsdatei (z.B. `/etc/nginx/sites-available/talentbinder`), um das Frontend auszuliefern und die API-Anfragen an das Backend weiterzuleiten.
-
-```nginx
-# /etc/nginx/sites-available/talentbinder
-server {
-    listen 80;
-    server_name talentbinder.com;
-
-    # Pfad zum Frontend
-    root /var/www/talentbinder-frontend;
-    index index.html;
-
-    # Reverse Proxy für das Backend
-    location /api/ {
-        proxy_pass https://talentbinder-backend.onrender.com/; # Port des Backends
-        proxy_set_header Host $host;
-        # Weitere proxy-Header...
-    }
-
-    # SPA-Fallback für das Frontend
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-### 4. Nginx aktivieren
-```bash
-# Konfiguration aktivieren und Nginx neu laden
-sudo ln -s /etc/nginx/sites-available/talentbinder /etc/nginx/sites-enabled/
+sudo systemctl status nginx
 sudo nginx -t
 sudo systemctl reload nginx
 ```
+
+See [scripts/README.md](../../scripts/README.md) for troubleshooting.
+
+## 🧪 Testing
+
+```bash
+npm run lint  # ESLint
+```
+
+## 📚 Documentation
+
+- [Environment Configuration](../../docs/ENV_CONFIGURATION.md)
+- [CI/CD Pipeline](../../docs/CI_CD_PIPELINE.md)
+- [Quick Reference](../../docs/QUICK_REFERENCE.md)
 
 

@@ -1,0 +1,35 @@
+{
+  "name": "talentbinder-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/backend",
+    "packages/frontend",
+    "packages/shared"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build:shared && npm run build --workspaces --if-present",
+    "build:shared": "npm run build --workspace=@talentbinder/shared",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "lint": "npm run lint --workspaces --if-present",
+    "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
+    "install:all": "npm install",
+    "test": "npm run test --workspaces --if-present",
+    "prepare-deploy": "node scripts/prepare-deploy.js",
+    "deploy:backend": "node scripts/deploy.js backend",
+    "deploy:frontend": "node scripts/deploy.js frontend",
+    "deploy:all": "node scripts/deploy.js all"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

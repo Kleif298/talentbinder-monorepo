@@ -25,5 +25,11 @@ yarn-debug.log*
 .DS_Store
 Thumbs.db
 
+# CI/CD keys (never commit these!)
+gitlab-ci-key
+gitlab-ci-key.pub
+*.pem
+*.key
+
 # Workspace file (optional - keep if you want it tracked)
 # talentbinder-workspace.code-workspace

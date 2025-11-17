@@ -1,0 +1,123 @@
+# TalentBinder Hybrid Mono-Repo CI/CD Pipeline
+# Simple deployment pipeline inspired by rising-track pattern
+# Detects changes and deploys only what changed
+
+stages:
+  - build
+  - deploy
+
+variables:
+  # Deployment directories on the server
+  BACKEND_DEPLOY_DIR: "/var/www/talentbinder-backend"
+  FRONTEND_DEPLOY_DIR: "/var/www/talentbinder-frontend"
+  
+  # Server configuration  
+  SERVER: "www.lab.local"
+
+# ============================================================================
+# BUILD STAGE - Build packages that changed
+# ============================================================================
+
+build_backend:
+  stage: build
+  image: node:20-alpine
+  script:
+    - echo "Installing dependencies and building backend..."
+    - npm ci
+    - npm run build:shared
+    - npm run build:backend
+  artifacts:
+    paths:
+      - packages/backend/dist/
+      - packages/backend/package.json
+      - packages/backend/package-lock.json
+      - packages/backend/setup.sh
+      - packages/backend/.env.render
+      - packages/shared/dist/
+    expire_in: 1 hour
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/backend/**/*
+        - packages/shared/**/*
+      when: always
+
+build_frontend:
+  stage: build
+  image: node:20-alpine
+  script:
+    - echo "Installing dependencies and building frontend..."
+    - npm ci
+    - npm run build:shared
+    - npm run build:frontend
+  artifacts:
+    paths:
+      - packages/frontend/dist/
+      - packages/frontend/setup.sh
+    expire_in: 1 hour
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/frontend/**/*
+        - packages/shared/**/*
+      when: always
+
+# ============================================================================
+# DEPLOY STAGE - Deploy to server using gitlab-deploy.sh
+# ============================================================================
+
+deploy_backend:
+  stage: deploy
+  dependencies:
+    - build_backend
+  script:
+    - echo "Preparing backend deployment package..."
+    - cd packages/backend
+    - tar -czf /tmp/backend-deploy.tar.gz dist/ package.json package-lock.json setup.sh .env.render
+    
+    - echo "Copying to server..."
+    - sudo scp /tmp/backend-deploy.tar.gz $SERVER:/tmp/
+    
+    - echo "Deploying on server..."
+    - sudo ssh $SERVER "
+        cd $BACKEND_DEPLOY_DIR &&
+        tar -xzf /tmp/backend-deploy.tar.gz &&
+        ./setup.sh &&
+        rm /tmp/backend-deploy.tar.gz
+      "
+    
+    - echo "Backend deployed successfully!"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/backend/**/*
+        - packages/shared/**/*
+      when: on_success
+
+deploy_frontend:
+  stage: deploy
+  dependencies:
+    - build_frontend
+  script:
+    - echo "Preparing frontend deployment package..."
+    - cd packages/frontend
+    - tar -czf /tmp/frontend-deploy.tar.gz dist/ setup.sh
+    
+    - echo "Copying to server..."
+    - sudo scp /tmp/frontend-deploy.tar.gz $SERVER:/tmp/
+    
+    - echo "Deploying on server..."
+    - sudo ssh $SERVER "
+        cd $FRONTEND_DEPLOY_DIR &&
+        tar -xzf /tmp/frontend-deploy.tar.gz &&
+        ./setup.sh &&
+        rm /tmp/frontend-deploy.tar.gz
+      "
+    
+    - echo "Frontend deployed successfully!"
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/frontend/**/*
+        - packages/shared/**/*
+      when: on_success

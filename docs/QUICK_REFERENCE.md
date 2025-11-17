@@ -1,34 +1,36 @@
-# Quick Reference: Monorepo + Multi-Repo Deployment
+# Quick Reference: TalentBinder Monorepo
 
 ## ✅ What You Have Now
 
-**Local Development = Monorepo**
-- Work in one repo: `talent-binder-monorepo`
-- Shared package is NOT a separate repo
-- Shared package is NOT published to NPM
-- It's a local workspace package via NPM Workspaces
+**Hybrid Monorepo with Automated CI/CD**
+- Work in one repo: `talentbinder-monorepo`
+- Shared package is a local workspace package via NPM Workspaces
 - All packages use `node_modules` in root (hoisted)
-
-**Deployment = Multi-Repo**
-- Push to 3 separate GitLab repos using git subtree
-- Backend repo, Frontend repo, Shared repo
-- Deployment services (Render) pull from individual repos
+- GitLab CI/CD handles building and deploying automatically
+- Smart change detection - only builds/deploys what changed
 
 ---
 
-## 🚀 Setup Git Remotes (One Time)
+## 🚀 Setup (One Time)
 
-```powershell
-# In your monorepo root
-cd "c:\Users\leiff\vscProjects\talent-binder -monorepo"
+### 1. Configure GitLab CI/CD Variables
 
-# Add remotes (replace with your actual GitLab URLs)
-git remote add backend-origin git@gitlab.com:YOUR_ORG/talentbinder-backend.git
-git remote add frontend-origin git@gitlab.com:YOUR_ORG/talentbinder-frontend.git
-git remote add shared-origin git@gitlab.com:YOUR_ORG/talentbinder-shared.git
+Go to GitLab → Settings → CI/CD → Variables and add:
 
-# Verify
-git remote -v
+| Variable | Value | Masked |
+|----------|-------|--------|
+| `SSH_PRIVATE_KEY` | Your SSH private key | ✅ |
+| `SERVER_USER` | Server SSH user (e.g., `deploy`) | ❌ |
+| `SERVER_HOST` | `www.lab.local` | ❌ |
+
+### 2. Setup Server
+
+```bash
+# SSH into your server
+ssh user@www.lab.local
+
+# Run the backend service setup script
+sudo /usr/local/bin/setup-backend-service.sh
 ```
 
 ---
@@ -36,53 +38,56 @@ git remote -v
 ## 📦 Daily Development
 
 ```powershell
-# 1. Install dependencies (creates symlinks)
+# 1. Install dependencies
 npm install
 
-# 2. Build shared package
+# 2. Build shared package (if you made changes to it)
 npm run build:shared
 
-# 3. Start development
+# 3. Start development servers
 npm run dev
 
-# 4. Make changes to any package (backend, frontend, or shared)
+# Or start individually:
+npm run dev:backend   # Backend on port 4000
+npm run dev:frontend  # Frontend on port 5173
 
-# 5. If you changed shared types, rebuild:
-npm run build:shared
+# 4. Make your changes to any package
 
-# 6. Commit to monorepo
+# 5. Commit and push
 git add .
 git commit -m "Your message"
 git push origin main
 ```
 
+**That's it!** GitLab CI/CD automatically:
+- Detects what changed (backend/frontend/shared)
+- Builds only what needs building
+- Deploys to your server
+
 ---
 
-## 🚢 Deployment to GitLab
+## 🚢 Deployment (Automatic)
 
-### Option 1: Deploy Everything
-```powershell
-npm run deploy:all
-```
+### What Triggers Deployment?
 
-This will:
-1. Build shared package
-2. Copy shared to backend/frontend node_modules
-3. Push shared to GitLab
-4. Push backend to GitLab
-5. Push frontend to GitLab
+**Backend deploys when you change:**
+- `packages/backend/**/*`
+- `packages/shared/**/*`
 
-### Option 2: Deploy Individually
-```powershell
-# Deploy shared only
-npm run deploy:shared
+**Frontend deploys when you change:**
+- `packages/frontend/**/*`
+- `packages/shared/**/*`
 
-# Deploy backend only
-npm run deploy:backend
+**Both deploy when you change:**
+- `packages/shared/**/*`
 
-# Deploy frontend only
-npm run deploy:frontend
-```
+### Manual Full Deployment
+
+If you need to force deploy everything:
+
+1. Go to GitLab → CI/CD → Pipelines
+2. Click on latest pipeline
+3. Find `deploy_all` job and click "Play" ▶️
 
 ---
 
@@ -101,11 +106,11 @@ import type { Candidate } from '@talentbinder/shared';
 3. Symlink points to `packages/shared`
 4. Loads types from `packages/shared/dist/`
 
-### In Deployment (Multi-Repo)
+### In Production
 Same imports work because:
-- `prepare-deploy.js` copies built shared to `node_modules/@talentbinder/shared`
-- OR you use git submodule in deployment repos
-- OR deployment installs shared from GitLab
+- CI/CD builds shared package first
+- Backend/frontend have shared as a workspace dependency
+- Node resolves via workspace symlink
 
 ---
 
@@ -114,8 +119,8 @@ Same imports work because:
 ```powershell
 # Development
 npm run dev                  # Start both backend & frontend
-npm run dev:backend          # Start backend only
-npm run dev:frontend         # Start frontend only
+npm run dev:backend          # Start backend only (port 4000)
+npm run dev:frontend         # Start frontend only (port 5173)
 
 # Building
 npm run build:shared         # Build shared package (types & JS)
@@ -123,18 +128,52 @@ npm run build:backend        # Build backend
 npm run build:frontend       # Build frontend
 npm run build                # Build all (shared first, then others)
 
-# Deployment
-npm run prepare-deploy       # Copy shared to backend/frontend
-npm run deploy:shared        # Push shared to GitLab
-npm run deploy:backend       # Build & push backend to GitLab
-npm run deploy:frontend      # Build & push frontend to GitLab
-npm run deploy:all           # Deploy everything
+# Testing
+npm run lint                 # Lint all packages
+npm run test                 # Test all packages
 
 # Maintenance
 npm run clean                # Clean all node_modules and dist
 npm install                  # Install & link all packages
-npm run lint                 # Lint all packages
-npm run test                 # Test all packages
+```
+
+---
+
+## 🔧 CI/CD Commands (Server)
+
+```bash
+# Check backend service status
+sudo systemctl status talentbinder-backend
+
+# View backend logs (live)
+sudo journalctl -u talentbinder-backend -f
+
+# View recent backend logs
+sudo journalctl -u talentbinder-backend -n 100 --no-pager
+
+# Restart backend manually
+sudo systemctl restart talentbinder-backend
+
+# Stop/Start backend
+sudo systemctl stop talentbinder-backend
+sudo systemctl start talentbinder-backend
+
+# Check deployment directory
+ls -la /var/www/talentbinder-backend
+ls -la /var/www/talentbinder-frontend
+
+# View deployment backups
+ls -la /var/www/talentbinder-backend_backup_*
+
+# Check nginx status
+sudo systemctl status nginx
+
+# Reload nginx
+sudo systemctl reload nginx
+
+# View nginx logs
+sudo tail -f /var/log/nginx/access.log
+sudo tail -f /var/log/nginx/error.log
 ```
 
 ---
@@ -143,6 +182,8 @@ npm run test                 # Test all packages
 
 ```
 monorepo/
+├── .gitlab-ci.yml             ← CI/CD pipeline configuration
+│
 ├── node_modules/
 │   └── @talentbinder/
 │       └── shared/            ← Symlink to packages/shared
@@ -150,10 +191,12 @@ monorepo/
 ├── packages/
 │   ├── backend/
 │   │   ├── (no node_modules)  ← Uses root node_modules
+│   │   ├── dist/              ← Built files (after npm run build:backend)
 │   │   └── package.json       ← Has "@talentbinder/shared": "*"
 │   │
 │   ├── frontend/
 │   │   ├── (no node_modules)  ← Uses root node_modules
+│   │   ├── dist/              ← Built files (after npm run build:frontend)
 │   │   └── package.json       ← Has "@talentbinder/shared": "*"
 │   │
 │   └── shared/
@@ -162,7 +205,12 @@ monorepo/
 │       └── package.json       ← Name: "@talentbinder/shared"
 │
 ├── scripts/
-│   └── prepare-deploy.js      ← Copies shared for deployment
+│   ├── gitlab-deploy.sh       ← Server deployment script
+│   └── setup-backend-service.sh  ← Backend service setup
+│
+├── docs/
+│   ├── CI_CD_PIPELINE.md      ← Complete CI/CD documentation
+│   └── QUICK_REFERENCE.md     ← This file
 │
 └── package.json               ← Workspace config with all scripts
 ```
@@ -172,30 +220,44 @@ monorepo/
 ## ❓ FAQ
 
 ### Do I need to publish `shared` to NPM?
-**No.** It's a local workspace package.
+**No.** It's a local workspace package managed by NPM workspaces.
 
-### Do I need a separate repo for `shared` during development?
-**No.** It lives in `packages/shared` in your monorepo.
+### How does deployment work?
+Push to `main` branch → GitLab CI/CD automatically builds and deploys. See [CI_CD_PIPELINE.md](CI_CD_PIPELINE.md) for details.
 
-### Do I need separate repos for deployment?
-**Yes.** Create 3 GitLab repos (backend, frontend, shared) for deployment services.
-
-### How does shared get into backend/frontend?
-**Development:** NPM workspaces creates symlinks automatically.
-**Deployment:** The `prepare-deploy.js` script copies it, or you use git submodules.
+### What if I only change the backend?
+CI/CD detects the change and only builds/deploys the backend. Frontend is skipped.
 
 ### What if I change shared types?
-Run `npm run build:shared` to rebuild. Backend/frontend will pick up changes immediately via the symlink.
+CI/CD rebuilds shared first, then rebuilds and deploys both backend and frontend (since both depend on shared).
 
-### Can I still use git normally?
-**Yes.** Keep using `git add`, `git commit`, `git push` for your monorepo. The deployment scripts use `git subtree` to push to separate repos.
+### How do I see what the pipeline is doing?
+Go to GitLab → CI/CD → Pipelines → Click on the latest pipeline to see each job's output.
+
+### Can I deploy manually?
+Yes! In GitLab → Pipelines → Click pipeline → Find `deploy_all` → Click "Play" ▶️
+
+### How do I rollback a deployment?
+SSH to server and restore from backup:
+```bash
+ssh user@www.lab.local
+sudo systemctl stop talentbinder-backend
+sudo mv /var/www/talentbinder-backend /var/www/talentbinder-backend_failed
+sudo mv /var/www/talentbinder-backend_backup_TIMESTAMP /var/www/talentbinder-backend
+sudo systemctl start talentbinder-backend
+```
 
 ---
 
 ## 🎯 Quick Deploy Checklist
 
-- [ ] Commit all changes to monorepo: `git commit -am "Your message"`
-- [ ] Push to monorepo: `git push origin main`
+- [ ] Make your changes locally
+- [ ] Test locally: `npm run dev`
+- [ ] Build locally to check for errors: `npm run build`
+- [ ] Commit changes: `git commit -am "Your message"`
+- [ ] Push to GitLab: `git push origin main`
+- [ ] Watch pipeline in GitLab CI/CD dashboard
+- [ ] Verify deployment on production server
 - [ ] Deploy to GitLab: `npm run deploy:all`
 - [ ] Verify deployment on Render/your hosting service
 

@@ -1,0 +1,41 @@
+@use '~/styles/variables.scss' as vars;
+
+.users-page {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+    background-color: vars.$grey-100;
+}
+
+.users-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    padding: 1.5rem;
+    gap: 1.5rem;
+}
+
+.users-header {
+    h1 {
+        margin: 0;
+        font-size: 2rem;
+        color: vars.$grey-900;
+        margin-bottom: 0.5rem;
+    }
+
+    .users-description {
+        margin: 0;
+        color: vars.$grey-700;
+        font-size: 1rem;
+    }
+}
+
+.users-list-container {
+    flex: 1;
+    overflow: hidden;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid vars.$grey-300;
+}

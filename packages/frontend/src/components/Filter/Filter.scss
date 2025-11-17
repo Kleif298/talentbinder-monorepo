@@ -1,0 +1,93 @@
+@use "../../styles/_variables.scss" as vars;
+
+.filter {
+  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 12px;
+  align-items: center;
+  //background-color: #f9fafb;
+  border-radius: 8px;
+
+}
+
+.searchbar {
+  min-width: 200px;
+  flex: 1;
+  max-width: 400px;
+  height: 40px;
+  font-style: italic;
+  border-radius: 8px;
+  padding: 0 12px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+}
+
+.filter button {
+  height: 40px;
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 8px;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f3f4f6;
+    border-color: #9ca3af;
+  }
+}
+
+.filter-dropdown {
+  display: flex;
+  flex-flow: row nowrap;
+  gap: 8px;
+  align-items: center;
+  display: none;
+
+  select {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+  }
+}
+
+.talent-toggle-icon {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+}
+
+.talent-toggle-icon.enabled {
+  background-color: vars.$success-color;
+}
+.talent-toggle-icon.disabled {
+  background-color: vars.$error-color;
+}
+
+button img[alt="search icon"] {
+  height: 20px;
+  padding: 0;
+}

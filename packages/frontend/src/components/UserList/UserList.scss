@@ -1,0 +1,29 @@
+@use '~/styles/variables.scss' as vars;
+
+.user-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    overflow-y: auto;
+    height: 100%;
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+}
+
+.user-list-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 1.1rem;
+    color: #6c757d;
+    padding: 2rem;
+
+    &.error {
+        color: #dc3545;
+    }
+}

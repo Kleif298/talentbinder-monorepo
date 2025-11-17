@@ -1,0 +1,135 @@
+@use "../../styles/_variables.scss" as vars;
+@use "sass:color";
+
+header {
+  top: 0;
+  left: 0;
+  position: sticky;
+  width: 100%;
+  color: vars.$grey-100;
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.25);
+}
+
+.header-main {
+  background-color: vars.$primary-color;
+  height: 60px;
+  margin: 0;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0 30px;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.header-line {
+  height: 2px;
+  background-color: vars.$secondary-color;
+}
+
+.header-title {
+  margin: 0;
+  padding: 0;
+  line-height: 60px;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: flex-start;
+  color: vars.$secondary-color;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-data {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.admin-state {
+  font-weight: 100;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.email-holder {
+  padding: 5px 25px;
+  background-color: vars.$grey-100;
+  border: solid 1px vars.$grey-500;
+  border-radius: 50px;
+  color: vars.$grey-900;
+  font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+nav {
+  height: 30px;
+  background-color: vars.$grey-300;
+  color: black;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+
+  &:not(.active) {
+    box-shadow: inset 5px 5px 5px 0 rgba(0, 0, 0, 0.25);
+  }
+
+  & .active {
+    background-color: vars.$primary-color;
+    color: white;
+    font-weight: 600;
+  }
+}
+
+nav a {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  color: vars.$primary-color;
+  font-weight: 500;
+  transition: all 0.2s;
+  text-decoration: none;
+
+  &:hover:not(.active) {
+    background-color: vars.$secondary-color;
+    color: vars.$grey-100;
+  }
+}
+
+.logout-button {
+  background-color: vars.$error-color;
+  color: vars.$grey-100;
+  cursor: pointer;
+  height: 30px;
+  padding: 0 15px;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background-color: color.adjust(vars.$error-color, $lightness: -10%);
+  }
+}
+
+.history-icon {
+  display: none;
+  font-size: 1.5rem;
+  color: vars.$grey-100;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  width: 30px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: vars.$secondary-color;
+  }
+}

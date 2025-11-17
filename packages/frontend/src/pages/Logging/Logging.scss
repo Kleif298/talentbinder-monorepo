@@ -1,0 +1,243 @@
+@use "../../styles/variables" as vars;
+
+.logging-page {
+
+  h1 {
+    color: vars.$primary-color;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: black;
+  }
+
+  .logging-body {
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .stats-section {
+    margin-bottom: 2rem;
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+
+
+      .stat-card {
+        background: white;
+        border: 1px solid black;
+        border-radius: 8px;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .stat-label {
+          font-size: 0.85rem;
+          color: grey;
+          text-align: center;
+        }
+
+        .stat-value {
+          font-size: 1.8rem;
+          font-weight: bold;
+          color: vars.$primary-color;
+        }
+      }
+    }
+  }
+
+  .filters-section {
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+
+    .filters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        label {
+          font-size: 0.9rem;
+          font-weight: 500;
+          color: black;
+        }
+
+        select,
+        input {
+          padding: 0.5rem;
+          border: 1px solid black;
+          border-radius: 4px;
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    button {
+      background: vars.$secondary-color;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+
+  .error-message {
+    background: #fee;
+    color: #c00;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 2rem;
+    color: grey;
+  }
+
+  .logs-section {
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+
+    .logs-table {
+      overflow-x: auto;
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+
+        thead {
+          background: white;
+
+          th {
+            text-align: left;
+            padding: 0.75rem;
+            font-weight: 600;
+            color: black;
+            border-bottom: 2px solid black;
+          }
+        }
+
+        tbody {
+          tr {
+            border-bottom: 1px solid black;
+
+            &:hover {
+              background: white;
+            }
+
+            td {
+              padding: 0.75rem;
+              vertical-align: top;
+
+              &.date-cell {
+                white-space: nowrap;
+                color: grey;
+                font-size: 0.85rem;
+              }
+
+              &.details-cell {
+                max-width: 300px;
+
+                pre {
+                  font-size: 0.75rem;
+                  background: white;
+                  padding: 0.5rem;
+                  border-radius: 4px;
+                  overflow-x: auto;
+                  max-height: 150px;
+                }
+              }
+
+              .action-badge {
+                display: inline-block;
+                padding: 0.3rem 0.6rem;
+                border-radius: 4px;
+                font-size: 0.8rem;
+                font-weight: 500;
+
+                &.action-create {
+                  background: #e7f5e7;
+                  color: #2d6b2d;
+                }
+
+                &.action-update {
+                  background: #e7f0ff;
+                  color: #1e4d8b;
+                }
+
+                &.action-delete {
+                  background: #ffe7e7;
+                  color: #8b1e1e;
+                }
+
+                &.action-login {
+                  background: #fff3e0;
+                  color: #8b5e00;
+                }
+
+                &.action-other {
+                  background: #f0f0f0;
+                  color: #555;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+
+    button {
+      background: vars.$primary-color;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:disabled {
+        background: grey;
+        cursor: not-allowed;
+      }
+
+      &:not(:disabled):hover {
+        opacity: 0.9;
+      }
+    }
+
+    span {
+      color: black;
+      font-size: 0.9rem;
+    }
+  }
+}

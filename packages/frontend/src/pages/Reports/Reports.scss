@@ -1,0 +1,248 @@
+@use "../../styles/_variables.scss" as vars;
+
+.reports-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: vars.$grey-50;
+}
+
+.reports-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100vw;
+  height: calc(100vh - 80px);
+  align-items: flex-start;
+  justify-content: center;
+  gap: 0;
+  overflow: hidden;
+}
+
+.reports-header {
+  width: 100%;
+  padding: 0 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-bottom: 1px solid vars.$grey-200;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.reports-header-content {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  gap: 12px;
+}
+
+.reports-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: vars.$grey-900;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: vars.$grey-600;
+  }
+}
+
+.reports-search {
+  flex: 1;
+  max-width: 400px;
+  padding: 10px 16px;
+  border: 1px solid vars.$grey-300;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: vars.$primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  &::placeholder {
+    color: vars.$grey-400;
+  }
+}
+
+.reports-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: vars.$grey-50;
+  padding: 0;
+}
+
+.events-grid {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  box-sizing: border-box;
+}
+
+.loading-state,
+.empty-state,
+.error-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  min-height: 400px;
+
+  p {
+    margin: 0 0 16px 0;
+    font-size: 1rem;
+    color: vars.$grey-600;
+  }
+}
+
+.error-state {
+  p {
+    color: #dc2626;
+  }
+}
+
+.retry-button,
+.clear-search-button {
+  padding: 10px 20px;
+  background: vars.$primary-color;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 12px;
+
+  &:hover {
+    background: #2563eb;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+// Scrollbar styling
+.reports-content {
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: vars.$grey-100;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: vars.$grey-400;
+    border-radius: 4px;
+
+    &:hover {
+      background: vars.$grey-500;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 1024px) {
+  .events-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .reports-header-content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .reports-title-section {
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    p {
+      font-size: 0.8rem;
+    }
+  }
+
+  .reports-search {
+    max-width: 100%;
+  }
+
+  .events-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    padding: 16px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reports-header-content {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 0;
+  }
+
+  .reports-title-section {
+    h1 {
+      font-size: 1.1rem;
+    }
+
+    p {
+      font-size: 0.75rem;
+    }
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 12px 24px;
+  }
+
+  .loading-state,
+  .empty-state,
+  .error-state {
+    min-height: 200px;
+    padding: 24px 12px;
+
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}

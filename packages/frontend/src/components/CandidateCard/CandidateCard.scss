@@ -1,0 +1,189 @@
+@use "../../styles/_variables.scss" as vars;
+
+.candidate-card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid vars.$grey-200;
+  overflow: hidden;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    border-color: vars.$primary-color;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+  }
+
+  &.eliminated {
+    opacity: 0.6;
+    border-color: vars.$grey-300;
+    
+    &:hover {
+      border-color: vars.$grey-400;
+      opacity: 0.7;
+    }
+  }
+}
+
+.candidate-card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+  gap: 16px;
+}
+
+.candidate-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.candidate-title-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidate-name {
+  margin: 0;
+  font-size: 3rem;
+  font-weight: 600;
+  color: vars.$grey-900;
+  line-height: 1.4;
+}
+
+.candidate-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.candidate-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  width: fit-content;
+
+  &.favorite {
+    background: linear-gradient(135deg, rgba(250, 204, 21, 0.15) 0%, rgba(250, 204, 21, 0.25) 100%);
+    color: #ca8a04;
+    border: 1px solid rgba(250, 204, 21, 0.3);
+  }
+
+  &.eliminated {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+
+  .badge-icon {
+    font-size: 0.75rem;
+  }
+}
+
+.edit-button-icon {
+  background: vars.$grey-100;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-size: 1rem;
+
+  &:hover {
+    background: vars.$grey-200;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.candidate-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.meta-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: vars.$grey-50;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.meta-icon {
+  color: vars.$primary-color;
+  font-size: 1rem;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.meta-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.meta-label {
+  font-size: 0.7rem;
+  color: vars.$grey-500;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 0.875rem;
+  color: vars.$grey-900;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+.candidate-footer {
+  padding-top: 12px;
+  border-top: 1px solid vars.$grey-200;
+  font-size: 0.75rem;
+  color: vars.$grey-500;
+}
+
+.candidate-date {
+  font-style: italic;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .candidate-card-content {
+    padding: 16px;
+  }
+
+  .candidate-name {
+    font-size: 1.1rem;
+  }
+}

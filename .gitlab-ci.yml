@@ -1,6 +1,5 @@
 # TalentBinder Hybrid Mono-Repo CI/CD Pipeline
-# Simple deployment pipeline inspired by rising-track pattern
-# Detects changes and deploys only what changed
+# Detects changes and deploys only what changed (backend or shared -> backend, frontend or shared -> frontend)
 
 stages:
   - build
@@ -20,8 +19,28 @@ variables:
 
 build_backend:
   stage: build
-  image: node:20-alpine
   script:
+    - echo "Setting up Node.js environment using NVM..."
+    # START NVM SETUP
+    - |
+      # Define NVM directory
+      export NVM_DIR="$HOME/.nvm"
+      
+      # Download and install NVM if not present
+      if [ ! -d "$NVM_DIR" ]; then
+        echo "NVM not found, installing..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      fi
+      
+      # Load NVM for the current session
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      
+      # Install and use a specific Node version (Change '20' if your project requires a different version)
+      echo "Installing and using Node 20..."
+      nvm install 20 
+      nvm use 20
+    # END NVM SETUP
+    
     - echo "Installing dependencies and building backend..."
     - npm ci
     - npm run build:shared
@@ -44,12 +63,25 @@ build_backend:
 
 build_frontend:
   stage: build
-  image: node:20-alpine
   script:
+    - echo "Setting up Node.js environment using NVM..."
+    # START NVM SETUP (Identical to backend setup)
+    - |
+      export NVM_DIR="$HOME/.nvm"
+      if [ ! -d "$NVM_DIR" ]; then
+        echo "NVM not found, installing..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      fi
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      echo "Installing and using Node 20..."
+      nvm install 20
+      nvm use 20
+    # END NVM SETUP
+    
     - echo "Installing dependencies and building frontend..."
     - npm ci
-    - npm run build:shared
     - npm run build:frontend
+    - echo "Installing dependencies and building frontend..."
   artifacts:
     paths:
       - packages/frontend/dist/

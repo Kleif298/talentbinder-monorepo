@@ -38,7 +38,8 @@ switch (NODE_ENV) {
     console.log('⚠️  Unknown environment, using development defaults');
 }
 
-console.log(`📌 Environment: ${NODE_ENV}`);
+console.log(`📌 Node-Environment: ${NODE_ENV}`);
+console.log(`📌 Deploy-Environment (needed if NODE_ENV=production): ${process.env.DEPLOY_ENV}`);
 console.log(`🔌 Port: ${process.env.PORT}`);
 console.log(`🔗 Frontend: ${process.env.FRONTEND_URL}`);
 console.log(`💾 Database: ${process.env.DB_URL ? 'Using DB_URL' : `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`}`);

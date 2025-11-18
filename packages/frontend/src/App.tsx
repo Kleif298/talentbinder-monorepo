@@ -12,6 +12,8 @@ import AdminProtectedRoute from "./guards/AdminProtectedRoute";
 import "./App.css"; 
 
 
+//test - chame entferne
+
 function App() {
   return (
     <BrowserRouter>

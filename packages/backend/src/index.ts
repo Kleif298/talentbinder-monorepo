@@ -45,6 +45,7 @@ console.log(`🔗 Frontend: ${process.env.FRONTEND_URL}`);
 console.log(`💾 Database: ${process.env.DB_URL ? 'Using DB_URL' : `${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`}`);
 console.log(`🔐 LDAP: ${process.env.LDAP_URL}`);
 
+// test - chame entferne
 // NOW import routes (after env is loaded!)
 import authRouter from './routes/auth.js';
 import eventsRouter from './routes/events.js';

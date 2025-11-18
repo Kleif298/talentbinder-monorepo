@@ -150,7 +150,7 @@ router.post('/login', async (req: Request, res: Response) => {
         res.cookie('user', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            sameSite: 'none',
             maxAge: 3600000
         });
         
@@ -175,7 +175,7 @@ router.post('/logout', (req: Request, res: Response) => {
     res.clearCookie('user', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict'
+        sameSite: 'none'
     });
     
     console.log('✅ User logged out');

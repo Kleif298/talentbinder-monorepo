@@ -56,6 +56,8 @@ import { requestLogger } from './middleware/logging.js';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
   'http://localhost:3022',
   'http://localhost:3024',

@@ -50,8 +50,8 @@ function getPool(): pg.Pool {
     user: poolConfig.user || 'from connection string',
     database: poolConfig.database || 'from connection string',
     hasPassword: !!poolConfig.password || !!poolConfig.connectionString,
-    passwordLength: poolConfig.password?.length || 'N/A',
-    passwordType: typeof poolConfig.password,
+    passwordLength: poolConfig.password?.length || poolConfig.connectionString?.length || 'N/A',
+    passwordType: typeof poolConfig.password || (poolConfig.connectionString ? 'in connection string' : false) || 'N/A',
   });
 
   poolInstance = new Pool({

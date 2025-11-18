@@ -29,7 +29,7 @@ switch (NODE_ENV) {
   case 'render':
     dotenv.config({ path: path.resolve(__dirname, '../.env.render'), override: true });
     console.log('☁️ Render mode - Cloud database (your server)');
-    break;
+    break; 
   case 'production':
     dotenv.config({ path: path.resolve(__dirname, '../.env.dal'), override: true });
     console.log('🚀 Production mode - DAL final production');

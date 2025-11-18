@@ -308,6 +308,11 @@ export async function isLdapServerReachable(): Promise<boolean> {
         });
 
         let resolved = false;
+        
+        if (process.env.NODE_ENV === 'production' && process.env.DEPLOY_ENV === 'render') {
+            resolve(false);
+            return;
+        }
 
         client.on('connect', () => {
             if (!resolved) {

@@ -4,6 +4,13 @@ import jwt from 'jsonwebtoken';
 import { pool } from '../config/db.js';
 import { authRequired } from '../middleware/auth.js';
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const DEPLOY_ENV = process.env.DEPLOY_ENV || '';
+const samSitePolicy = NODE_ENV === 'production' && DEPLOY_ENV === 'render' ? 'none' : 'lax';
+const secureCookie = NODE_ENV === 'production' && DEPLOY_ENV === 'render';
+
+console.log(`🔒 Cookie Settings - SameSite: ${samSitePolicy}, Secure: ${secureCookie}`);
+
 // Type definitions for auth utils (temporary until utils/auth.js is converted)
 interface AuthUser {
     id: number;
@@ -149,8 +156,8 @@ router.post('/login', async (req: Request, res: Response) => {
         
         res.cookie('user', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'none',
+            secure: secureCookie,
+            sameSite: samSitePolicy,
             maxAge: 3600000
         });
         
@@ -174,8 +181,8 @@ router.post('/login', async (req: Request, res: Response) => {
 router.post('/logout', (req: Request, res: Response) => {
     res.clearCookie('user', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'none'
+        secure: secureCookie,
+        sameSite: samSitePolicy
     });
     
     console.log('✅ User logged out');

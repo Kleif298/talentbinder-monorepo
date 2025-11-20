@@ -50,3 +50,5 @@ export type EventForm = {
   registrationsSendingAt?: string;
   registrationsClosingAt?: string;
 }
+
+export type testtest = string;

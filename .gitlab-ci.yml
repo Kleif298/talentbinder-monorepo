@@ -40,7 +40,7 @@ build_backend:
       nvm install 20 
       nvm use 20
     # END NVM SETUP
-    
+
     
     - echo "Installing dependencies and building backend..."
     - npm ci
@@ -106,7 +106,7 @@ deploy_backend:
   script:
     - echo "Preparing backend deployment package..."
     - cd packages/backend
-    - tar -czf /tmp/backend-deploy.tar.gz dist/ package.json package-lock.json setup.sh .env.render
+    - tar -czf /tmp/backend-deploy.tar.gz dist/ package.json package-lock.json setup.sh .env.dal
     
     - echo "Copying to server..."
     - sudo scp /tmp/backend-deploy.tar.gz $SERVER:/tmp/

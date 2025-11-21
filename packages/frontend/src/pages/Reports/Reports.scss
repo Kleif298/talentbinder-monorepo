@@ -22,31 +22,16 @@
   overflow: hidden;
 }
 
-.reports-header {
-  width: 100%;
-  padding: 0 24px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: white;
-  border-bottom: 1px solid vars.$grey-200;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+/* Use shared list header styling */
+.list-header {
+  /* kept in component styles */
 }
 
-.reports-header-content {
-  width: 100%;
-  max-width: 1400px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 0;
-  gap: 12px;
+.list-header-content {
+  /* kept in component styles */
 }
 
-.reports-title-section {
+.list-header-title {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -58,31 +43,15 @@
     color: vars.$grey-900;
   }
 
-  p {
+  .list-header-description {
     margin: 0;
     font-size: 0.85rem;
     color: vars.$grey-600;
   }
 }
 
-.reports-search {
-  flex: 1;
-  max-width: 400px;
-  padding: 10px 16px;
-  border: 1px solid vars.$grey-300;
-  border-radius: 8px;
-  font-size: 14px;
-  transition: all 0.2s ease;
-  
-  &:focus {
-    outline: none;
-    border-color: vars.$primary-color;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-  
-  &::placeholder {
-    color: vars.$grey-400;
-  }
+.list-header-search {
+  /* styled in ListHeader.scss; keep behavior consistent */
 }
 
 .reports-content {
@@ -185,23 +154,23 @@
 }
 
 @media (max-width: 768px) {
-  .reports-header-content {
+  .list-header-content {
     flex-direction: column;
     align-items: stretch;
     gap: 16px;
   }
 
-  .reports-title-section {
+  .list-header-title {
     h1 {
       font-size: 1.25rem;
     }
 
-    p {
+    .list-header-description {
       font-size: 0.8rem;
     }
   }
 
-  .reports-search {
+  .list-header-search {
     max-width: 100%;
   }
 
@@ -213,18 +182,18 @@
 }
 
 @media (max-width: 480px) {
-  .reports-header-content {
+  .list-header-content {
     flex-direction: column;
     gap: 12px;
     padding: 16px 0;
   }
 
-  .reports-title-section {
+  .list-header-title {
     h1 {
       font-size: 1.1rem;
     }
 
-    p {
+    .list-header-description {
       font-size: 0.75rem;
     }
   }

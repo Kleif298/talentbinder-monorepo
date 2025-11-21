@@ -4,6 +4,7 @@ import Header from "~/components/Header/Header.tsx";
 import Filter from "~/components/Filter/Filter.tsx";
 import GridList from "~/components/GridList/GridList.tsx";
 import ModalCandidates, { type CandidateForm } from "~/components/Modal/Modal.tsx";
+import ListHeader from "~/components/ListHeader/ListHeader.tsx";
 import CandidateInfoModal from "~/components/CandidateInfoModal/CandidateInfoModal.tsx";
 import MessageBanner, { type Message } from "~/components/MessageBanner/MessageBanner.tsx";
 //import { getAdminStatus } from "../../utils/auth";
@@ -95,17 +96,24 @@ const Candidates = () => {
       <MessageBanner message={message} onClose={() => setMessage(null)} />
       <div className={`candidate-frame ${selectedCandidate ? 'split-view' : ''}`}>
         <div className="candidate-list-section">
-          <div className="head-of-list">
-            <div className="head-of-list-content">
-              <Filter onFilterChange={handleFilterChange} /> 
-              <ModalCandidates 
+          <ListHeader
+            title="Kandidaten"
+            searchValue={filterParams.search}
+            onSearchChange={(v) => setFilterParams(prev => ({ ...prev, search: v }))}
+            rightSlot={(
+              <ModalCandidates
                 onSave={handleSaveCandidate}
                 candidateToEdit={candidateToEdit}
                 onClose={handleCloseModal}
                 onDelete={handleDeleteCandidate}
                 apprenticeships={apprenticeships}
               />
-            </div>
+            )}
+          />
+
+          {/* Keep full filter controls below the header to avoid moving search left of title */}
+          <div className="candidate-filter-bar">
+            <Filter onFilterChange={handleFilterChange} currentSearch={filterParams.search} />
           </div>
           <GridList 
             refreshKey={refreshKey} 

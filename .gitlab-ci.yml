@@ -2,6 +2,7 @@
 # Detects changes and deploys only what changed (backend or shared -> backend, frontend or shared -> frontend)
 
 stages:
+  - test
   - build
   - deploy
 
@@ -12,6 +13,88 @@ variables:
   
   # Server configuration  
   SERVER: "nodejs.lab.local"
+
+# ============================================================================
+# TEST STAGE - Run tests before building
+# ============================================================================
+
+test_backend:
+  stage: test
+  script:
+    - echo "Setting up Node.js environment using NVM..."
+    # START NVM SETUP
+    - |
+      export NVM_DIR="$HOME/.nvm"
+      if [ ! -d "$NVM_DIR" ]; then
+        echo "NVM not found, installing..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      fi
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      echo "Installing and using Node 20..."
+      nvm install 20 
+      nvm use 20
+    # END NVM SETUP
+    
+    - echo "Installing dependencies..."
+    - npm ci
+    
+    - echo "Running backend tests..."
+    - cd packages/backend
+    - npm run test:ci
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: packages/backend/coverage/cobertura-coverage.xml
+    paths:
+      - packages/backend/coverage/
+    expire_in: 1 week
+  coverage: '/Lines\s*:\s*(\d+\.?\d*)%/'
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/backend/**/*
+        - packages/shared/**/*
+      when: always
+
+test_frontend:
+  stage: test
+  script:
+    - echo "Setting up Node.js environment using NVM..."
+    # START NVM SETUP
+    - |
+      export NVM_DIR="$HOME/.nvm"
+      if [ ! -d "$NVM_DIR" ]; then
+        echo "NVM not found, installing..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+      fi
+      [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+      echo "Installing and using Node 20..."
+      nvm install 20
+      nvm use 20
+    # END NVM SETUP
+    
+    - echo "Installing dependencies..."
+    - npm ci
+    
+    - echo "Running frontend tests..."
+    - cd packages/frontend
+    - npm run test:ci
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: packages/frontend/coverage/cobertura-coverage.xml
+    paths:
+      - packages/frontend/coverage/
+    expire_in: 1 week
+  coverage: '/Lines\s*:\s*(\d+\.?\d*)%/'
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+      changes:
+        - packages/frontend/**/*
+        - packages/shared/**/*
+      when: always
 
 # ============================================================================
 # BUILD STAGE - Build packages that changed

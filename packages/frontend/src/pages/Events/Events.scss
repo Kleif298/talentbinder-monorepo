@@ -38,71 +38,20 @@
     background: vars.$grey-50;
 }
 
-.head-of-list {
-    width: 100%;
-    padding: 0 24px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: white;
-    border-bottom: 1px solid vars.$grey-200;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+.list-header {
+    /* handled by ListHeader component styles */
 }
 
-.head-of-list-content {
-    width: 100%;
+.list-header-content {
     max-width: 1400px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
-    gap: 12px;
 }
 
-.event-search {
-    flex: 1;
-    max-width: 400px;
-    padding: 10px 16px;
-    border: 1px solid vars.$grey-300;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: all 0.2s ease;
-    
-    &:focus {
-        outline: none;
-        border-color: vars.$primary-color;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    &::placeholder {
-        color: vars.$grey-400;
-    }
+.list-header-search {
+    /* styled in ListHeader.scss */
 }
 
-.create-event-button {
-    padding: 10px 20px;
-    background: vars.$primary-color;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-    
-    &:hover {
-        background: darken(vars.$primary-color, 10%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
-    }
-    
-    &:active {
-        transform: translateY(0);
-    }
+.list-header-create {
+    /* styled in ListHeader.scss */
 }
 
 .event-list-container {
@@ -190,7 +139,7 @@
         padding: 20px 16px;
     }
 
-    .head-of-list {
+    .list-header {
         padding: 0 16px;
     }
 }

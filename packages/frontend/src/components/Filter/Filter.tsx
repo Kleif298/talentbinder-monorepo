@@ -5,6 +5,8 @@ import { useState, useEffect } from "react";
 
 interface FilterProps {
   onFilterChange: (params: { search: string; status: string; sortBy: string }) => void;
+  // currentSearch is provided so the Filter doesn't overwrite the header search
+  currentSearch?: string;
 }
 
 const SortOptions = [
@@ -13,19 +15,18 @@ const SortOptions = [
   { value: 'status', label: 'Status' }
 ];
 
-const Filter = ({ onFilterChange }: FilterProps) => {
-  const [search, setSearch] = useState("");
+const Filter = ({ onFilterChange, currentSearch }: FilterProps) => {
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState("created_at_desc");
 
   // Melde Änderungen an den Parent 
   useEffect(() => {
     onFilterChange({
-      search,
+      search: (currentSearch ?? ''),
       status: selectedStatuses.length > 0 ? selectedStatuses.join(',') : '',
       sortBy
     });
-  }, [search, selectedStatuses, sortBy, onFilterChange]);
+  }, [currentSearch, selectedStatuses, sortBy, onFilterChange]);
 
   const handleStatusToggle = (status: string) => {
     setSelectedStatuses(prev => 
@@ -36,20 +37,14 @@ const Filter = ({ onFilterChange }: FilterProps) => {
   };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault(); 
+    e.preventDefault();
   };
 
   const isStatusSelected = (status: string) => selectedStatuses.includes(status);
 
   return (
     <form className="filter" onSubmit={handleSubmit}>
-      <input 
-        className="searchbar" 
-        type="text" 
-        placeholder="Nach Name oder Email suchen..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+      {/* Search is handled by the ListHeader component; keep the filter focussed on status/sort */}
       
       <div className="filter-dropdown">
         <label style={{ fontSize: '14px', fontWeight: '500', color: '#374151' }}>Status:</label>

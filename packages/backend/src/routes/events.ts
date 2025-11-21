@@ -48,6 +48,57 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:eventId", async (req: Request, res: Response) => {
+  const { eventId } = req.params;
+
+  try {
+    const result = await pool.query(`
+      SELECT 
+        e.event_id as id,
+        e.title,
+        e.description,
+        e.branch_id as "branchId",
+        e.template_id as "templateId",
+        e.location_id as "locationId",
+        e.registration_required as "registrationRequired",
+        e.invitations_sent as "invitationsSent",
+        e.invitations_sending_at as "invitationsSendingAt",
+        e.registrations_closing_at as "registrationsClosingAt",
+        e.created_at as "createdAt",
+        e.created_by as "createdByAccountId",
+        a.first_name as "createdByFirstName",
+        a.last_name as "createdByLastName",
+        es.date_at as "dateAt",
+        es.starting_at as "startingAt",
+        es.ending_at as "endingAt",
+        l.name as "locationName",
+        l.address as "locationAddress",
+        l.city as "locationCity",
+        l.plz as "locationPlz"
+      FROM Event e
+      JOIN Account a ON e.created_by = a.account_id
+      LEFT JOIN Event_Session es ON e.event_id = es.event_id
+      LEFT JOIN Location l ON e.location_id = l.location_id
+      WHERE e.event_id = $1;
+    `, [eventId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "Event nicht gefunden"
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      event: result.rows[0],
+    });
+  } catch (error) {
+    console.error("GET /api/events/:eventId Error:", error);
+    res.status(500).json({ success: false, message: (error as Error).message });
+  }
+});
+
 router.post("/", authRequired, async (req: Request, res: Response) => {
   const { title, description, branchId, templateId, locationId, registrationRequired, dateAt, startingAt, endingAt, invitationsSendingAt, registrationsClosingAt } = req.body as EventForm;
   console.log("POST /api/events request body:", req.body);

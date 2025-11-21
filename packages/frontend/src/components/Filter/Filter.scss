@@ -11,24 +11,7 @@
 
 }
 
-.searchbar {
-  min-width: 200px;
-  flex: 1;
-  max-width: 400px;
-  height: 40px;
-  font-style: italic;
-  border-radius: 8px;
-  padding: 0 12px;
-  border: 1px solid #d1d5db;
-  font-size: 14px;
-  transition: border-color 0.2s;
-
-  &:focus {
-    outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-  }
-}
+/* Search is handled by the ListHeader component; styles for a search input were removed to avoid duplication. */
 
 .filter button {
   height: 40px;

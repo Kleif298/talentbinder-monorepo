@@ -201,18 +201,19 @@
 
 .modal-trigger {
     padding: 10px 16px;
-    background-color: vars.$secondary-color;
+    background-color: vars.$primary-color;
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.12s;
 }
 
 .modal-trigger:hover {
-    background-color: vars.$primary-color;
+    background-color: vars.$primary-hover;
+    transform: translateY(-1px);
 }
 
 /* error/success messages are intentionally defined in global.scss to avoid duplication across components */

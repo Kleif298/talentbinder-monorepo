@@ -1,0 +1,122 @@
+@use "../../styles/_variables.scss" as vars;
+
+.list-header {
+  width: 100%;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+  border-bottom: 1px solid vars.$grey-200;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  box-sizing: border-box;
+
+  .list-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 0;
+    flex-wrap: nowrap;
+  }
+
+  .list-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .list-header-center {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 1rem;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .list-header-title {
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: vars.$grey-900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .list-header-description {
+      margin: 0;
+      color: vars.$grey-700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .list-header-search {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid vars.$grey-300;
+    background: white;
+    width: 100%;
+    max-width: 350px;
+    font-size: 0.95rem;
+    flex-shrink: 1;
+
+    &:focus {
+      outline: none;
+      border-color: vars.$primary-color;
+    }
+  }
+
+  .list-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .list-header-create {
+    background-color: vars.$primary-color;
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 0 16px;
+
+    .list-header-content {
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .list-header-left {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    .list-header-center {
+      width: 100%;
+      justify-content: center;
+    }
+
+    .list-header-right {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }
+}

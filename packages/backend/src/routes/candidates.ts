@@ -101,6 +101,68 @@ router.get("/", authRequired, async (req: Request, res: Response) => {
     }
 });
 
+router.get("/:id", authRequired, async (req: Request, res: Response) => {
+    const { id } = req.params;
+
+    try {
+        const result = await pool.query(`
+            SELECT 
+                c.candidate_id as id, 
+                c.first_name, 
+                c.last_name, 
+                c.email, 
+                c.phone,
+                c.candidate_status as status,
+                c.created_at,
+                c.created_by
+            FROM 
+                Candidate c
+            WHERE 
+                c.candidate_id = $1
+        `, [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ 
+                success: false, 
+                message: "Kandidat nicht gefunden" 
+            });
+        }
+
+        const candidateRow = snakeToCamelObj(result.rows[0]);
+
+        // Fetch apprenticeships for this candidate
+        const apprenticeshipsResult = await pool.query(`
+            SELECT 
+                a.apprenticeship_id as id,
+                a.name,
+                a.branch_id as "branchId"
+            FROM 
+                Candidate_Apprenticeship ca
+            JOIN 
+                Apprenticeship a ON ca.apprenticeship_id = a.apprenticeship_id
+            WHERE 
+                ca.candidate_id = $1
+        `, [id]);
+
+        const candidate = {
+            id: candidateRow.id,
+            firstName: candidateRow.firstName,
+            lastName: candidateRow.lastName,
+            email: candidateRow.email,
+            phone: candidateRow.phone,
+            status: candidateRow.status,
+            createdAt: candidateRow.createdAt,
+            createdBy: candidateRow.createdBy,
+            apprenticeships: apprenticeshipsResult.rows
+        };
+
+        res.status(200).json({ success: true, candidate });
+    } catch (error) {
+        console.error("GET /api/candidates/:id Error:", error);
+        res.status(500).json({ success: false, message: "Fehler beim Abrufen des Kandidaten." });
+    }
+});
+
 router.post("/", authRequired, async (req: Request, res: Response) => {
     const { firstName, lastName, email, status, apprenticeshipId, apprenticeshipIds } = req.body as CandidateForm & { apprenticeshipIds?: number[] };
     console.log("[DEBUG] POST /api/candidates body.apprenticeshipIds:", apprenticeshipIds, " apprenticeshipId:", apprenticeshipId);

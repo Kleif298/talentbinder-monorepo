@@ -7,16 +7,19 @@ set -e
 
 NAME="talentbinder-backend"
 SERVICE_FILE="/etc/systemd/system/$NAME.service"
-APP_DIR=$(pwd)  # Current directory (deployment directory)
+APP_DIR="/var/www/$NAME"
+
 
 echo "Setting up TalentBinder Backend..."
 echo "App Directory: $APP_DIR"
 
 # Service configuration
 SERVICE_CONTENT="[Unit]
-Description=TalentBinder Backend Application
-After=network.target postgresql.service
-Wants=postgresql.service
+Description=$NAME Application
+After=network.target
+# postgresql.service
+# Wants=postgresql.service
+# -> braucht noch eine postgres db aufm server
 
 [Service]
 Type=simple

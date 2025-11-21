@@ -7,6 +7,7 @@ import type { Event } from "~/types/Event";
 import { eventsAPI } from "~/api/eventsAPI";
 import { recruitersAPI } from "~/api/recruitersAPI";
 import "./Reports.scss";
+import ListHeader from "~/components/ListHeader/ListHeader.tsx";
 
 interface EventWithRegistrations extends Event {
   registrationCount?: number;
@@ -97,21 +98,11 @@ const Reports = () => {
       <MessageBanner message={message} onClose={() => setMessage(null)} />
 
       <div className="reports-container">
-        <div className="reports-header">
-          <div className="reports-header-content">
-            <div className="reports-title-section">
-              <h1>Reports</h1>
-              <p>Events, für die ich verantwortlich bin</p>
-            </div>
-            <input
-              className="reports-search"
-              type="text"
-              placeholder="Nach Events suchen..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
+        <ListHeader
+          title="Reports"
+          searchValue={searchTerm}
+          onSearchChange={(v) => setSearchTerm(v)}
+        />
 
         <div className="reports-content">
           {isLoading ? (

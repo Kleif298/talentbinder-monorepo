@@ -1,4 +1,4 @@
-@use '~/styles/variables.scss' as vars;
+@use "../../styles/_variables.scss" as vars;
 
 .users-page {
     display: flex;
@@ -17,15 +17,15 @@
     gap: 1.5rem;
 }
 
-.users-header {
+.list-header-title {
     h1 {
         margin: 0;
-        font-size: 2rem;
+        font-size: 1.5rem;
         color: vars.$grey-900;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.25rem;
     }
 
-    .users-description {
+    .list-header-description {
         margin: 0;
         color: vars.$grey-700;
         font-size: 1rem;

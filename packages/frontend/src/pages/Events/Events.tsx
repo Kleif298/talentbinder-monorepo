@@ -3,6 +3,7 @@ import Header from "~/components/Header/Header.tsx";
 import EventList from "~/components/EventList/EventList.tsx";
 import EventCreationPage from "~/components/EventCreationPage/EventCreationPage.tsx";
 import InfoModal from "~/components/InfoModal/InfoModal.tsx";
+import ListHeader from "~/components/ListHeader/ListHeader.tsx";
 import MessageBanner, { type Message } from "~/components/MessageBanner/MessageBanner.tsx";
 import type { Event } from "~/types/Event";
 
@@ -57,23 +58,14 @@ const Events = () => {
             <MessageBanner message={message} onClose={() => setMessage(null)} />
             <div className={`event-frame ${selectedEvent ? 'split-view' : ''}`}>
                 <div className="event-list-section">
-                    <div className="head-of-list">
-                        <div className="head-of-list-content">
-                            <input 
-                                className="event-search" 
-                                type="text" 
-                                placeholder="Nach Events suchen..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
-                            <button 
-                                className="create-event-button" 
-                                onClick={handleCreateEventClick}
-                            >
-                                + Event erstellen
-                            </button>
-                        </div>
-                    </div>
+                    <ListHeader
+                        title="Events"
+                        searchValue={searchTerm}
+                        onSearchChange={(v) => setSearchTerm(v)}
+                        showCreate={true}
+                        createLabel={"+ Event erstellen"}
+                        onCreate={handleCreateEventClick}
+                    />
                     <EventList 
                         refreshKey={refreshKey}
                         searchTerm={searchTerm}
